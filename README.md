@@ -1,4 +1,4 @@
-# Resolver Encoder + X2Cscope
+# LX34070A-LX34050-dsPIC33AK-pyX2Cscope-GUI
 
 **Last updated:** December 12, 2025
 
@@ -60,7 +60,14 @@ Everything you need to rebuild, modify, and run the resolver-to-encoder demo liv
 6. **Start a host tool:**
    - Use X2Cscope or run `python ResolverEncoder.py` to connect, load the ELF, and view the exported variables.
 
-## Connecting X2Cscope
+## Using the Python GUI (`ResolverEncoder.py`)
+
+- **Install deps:** `pip install pyx2cscope`.
+- **Run it:** `python ResolverEncoder.py`, choose the ELF (e.g. `dist/default/production/...production.elf`), select the COM port, and connect.
+- **Calibrate:** Click **Calibrate** to auto-populate offsets/gains based on the live resolver waveform. When running autocalibration, please spin the rotor/target until calibration is completed.
+- **Plotting:** The **Waveforms** tab shows sine, cosine, and angle/pi with adjustable trigger and windowing. **Counts/rev** lets you sweep resolutions without reflashing.
+
+## Connecting X2Cscope (more difficult than just using the GUI app provided)
 
 1. Launch X2Cscope and set the COM port for UART2 (115200-8-N-1).
 2. Import `dist/default/production/X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X.production.elf` so symbols are visible.
@@ -71,13 +78,6 @@ Everything you need to rebuild, modify, and run the resolver-to-encoder demo liv
    - `encoder_A`, `encoder_B`, `encoder_Z`
    - `counts_per_rev`, `sample_counter`
 4. Press *Run* to stream live data; edits to offsets/gains/`counts_per_rev` take effect immediately.
-
-## Using the Python GUI (`ResolverEncoder.py`)
-
-- **Install deps:** `pip install pyx2cscope`.
-- **Run it:** `python ResolverEncoder.py`, choose the ELF (e.g. `dist/default/production/...production.elf`), select the COM port, and connect.
-- **Calibrate:** Click **Calibrate** to auto-populate offsets/gains based on the live resolver waveform.
-- **Plotting:** The **Waveforms** tab shows sine, cosine, and angle/pi with adjustable trigger and windowing. **Counts/rev** lets you sweep resolutions without reflashing.
 
 ## How It Works (firmware)
 
