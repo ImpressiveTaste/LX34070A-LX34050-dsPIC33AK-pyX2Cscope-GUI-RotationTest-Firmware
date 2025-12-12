@@ -2,12 +2,10 @@
 
 **Last updated:** December 12, 2025
 
-This repository contains an MPLAB X project (`X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X`) and a companion Tigital Twin App Python GUI (`ResolverEncoder.py`) that turn dsPIC33AK ADC inputs into a software quadrature encoder.
-The firmware runs on Microchip's dsPIC33AK128MC106 ([EV02G02A](https://www.microchip.com/en-us/development-tool/EV02G02A)) using the Curiosity board ([EV74H48A](https://www.microchip.com/en-us/development-tool/ev74h48a)). Resolver sine/cosine signals are sampled, calibrated, converted to angle with `atan2f`, and exposed to both X2Cscope and the GUI so you can tune offsets/gains and counts-per-rev without reflashing. 
+This repository contains an MPLAB X project (`X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X`) and a companion Digital Twin App Python GUI (`ResolverEncoder.py`) that turn dsPIC33AK ADC inputs into a software quadrature encoder. The firmware runs on Microchip's dsPIC33AK128MC106 ([EV02G02A](https://www.microchip.com/en-us/development-tool/EV02G02A)) using the Curiosity board ([EV74H48A](https://www.microchip.com/en-us/development-tool/ev74h48a)). Resolver sine/cosine signals are sampled, calibrated, converted to angle with `atan2f`, and exposed to both X2Cscope and the GUI so you can tune offsets/gains and counts-per-rev without reflashing.
 
-Advantages of this sensor: no need of a magnet as a target, just a metallic target like a copper disk or a PCB!
+Advantages of this sensor: no need of a magnet as a target—just a metallic target like a copper disk or a PCB!
 https://www.microchip.com/en-us/products/sensors-and-motor-drive/inductive-position-sensors
-
 
 ## Project Highlights
 
@@ -20,7 +18,7 @@ https://www.microchip.com/en-us/products/sensors-and-motor-drive/inductive-posit
 ## Repository Layout
 
 ```
-LX340XX-dsPIC33AK/
+LX34070A-LX34050-dsPIC33AK-pyX2Cscope-GUI/
 ├── README.md                  <-- you are here
 ├── X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X/
 │   ├── main.c                 <-- resolver/encoder data path + X2Cscope hooks
@@ -48,7 +46,7 @@ Everything you need to rebuild, modify, and run the resolver-to-encoder demo liv
   - dsPIC33AK-MC_DFP v1.2.125 (already referenced by the project)
 - **Host tooling:**
   - X2Cscope for Windows/Linux ([x2cscope.github.io](https://x2cscope.github.io/))
-  - Python 3.9+ with `PyQt5`, `pyqtgraph`, `pyx2cscope`, `pyserial` (install via `pip install PyQt5 pyqtgraph pyx2cscope pyserial`)
+  - Python 3.9+ with `pyx2cscope` (install via `pip install pyx2cscope`)
 
 ## Setup Instructions
 
