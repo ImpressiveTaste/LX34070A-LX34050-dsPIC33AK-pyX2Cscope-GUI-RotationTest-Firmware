@@ -2,7 +2,12 @@
 
 **Last updated:** December 12, 2025
 
-This repository contains an MPLAB X project (`X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X`) and a companion Python GUI (`ResolverEncoder.py`) that turn dsPIC33AK resolver inputs into a software quadrature encoder with live X2Cscope visibility. The firmware runs on Microchip's dsPIC33AK128MC106 ([EV02G02A](https://www.microchip.com/en-us/development-tool/EV02G02A)) using the Curiosity board ([EV74H48A](https://www.microchip.com/en-us/development-tool/ev74h48a)). Resolver sine/cosine signals are sampled, calibrated, converted to angle with `atan2f`, and exposed to both X2Cscope and the GUI so you can tune offsets/gains and counts-per-rev without reflashing.
+This repository contains an MPLAB X project (`X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X`) and a companion Tigital Twin App Python GUI (`ResolverEncoder.py`) that turn dsPIC33AK ADC inputs into a software quadrature encoder.
+The firmware runs on Microchip's dsPIC33AK128MC106 ([EV02G02A](https://www.microchip.com/en-us/development-tool/EV02G02A)) using the Curiosity board ([EV74H48A](https://www.microchip.com/en-us/development-tool/ev74h48a)). Resolver sine/cosine signals are sampled, calibrated, converted to angle with `atan2f`, and exposed to both X2Cscope and the GUI so you can tune offsets/gains and counts-per-rev without reflashing. 
+
+Advantages of this sensor: no need of a magnet as a target, just a metallic target like a copper disk or a PCB!
+https://www.microchip.com/en-us/products/sensors-and-motor-drive/inductive-position-sensors
+
 
 ## Project Highlights
 
