@@ -1,31 +1,108 @@
 # Resolver Encoder + X2Cscope
 
-Resolver-style sine/cosine inputs on the dsPIC33AK128MC106 are sampled with ADC2, normalised, and converted to an angle via `atan2f`. Quadrature A/B/Z states are generated in software for the GUI (no GPIO drive yet). Everything stays visible over X2Cscope so the Python GUI can calibrate offsets/gains, adjust counts per revolution, and visualise live waveforms in real time.
+**Last updated:** December 12, 2025
 
-## Firmware overview (`X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X/main.c`)
+This repository contains an MPLAB X project (`X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X`) and a companion Python GUI (`ResolverEncoder.py`) that turn dsPIC33AK resolver inputs into a software quadrature encoder with live X2Cscope visibility. The firmware runs on Microchip's dsPIC33AK128MC106 ([EV02G02A](https://www.microchip.com/en-us/development-tool/EV02G02A)) using the Curiosity board ([EV74H48A](https://www.microchip.com/en-us/development-tool/ev74h48a)). Resolver sine/cosine signals are sampled, calibrated, converted to angle with `atan2f`, and exposed to both X2Cscope and the GUI so you can tune offsets/gains and counts-per-rev without reflashing.
 
-- Timer1 runs at 1 kHz. Each tick triggers ADC2 Channel0 (AN1) and Channel1 (AN4); raw samples land in `sin_raw` / `cos_raw` via ADC interrupts.
-- Calibration applies `sin_offset` / `cos_offset` and `sin_amplitude` / `cos_amplitude`, with gain sanitisation to avoid divide-by-zero if the GUI writes 0.0.
-- Angle `resolver_position` comes from `atan2f(sin_calibrated, cos_calibrated)`; A/B/Z states come from `counts_per_rev` in software only (no GPIO drive yet).
-- X2Cscope: `process_samples()` calls `X2CScope_Update()` after each fresh pair so the GUI can read/write all exposed globals.
+## Project Highlights
 
-Key X2Cscope-visible symbols: `sin_raw`, `cos_raw`, `sin_offset`, `cos_offset`, `sin_amplitude`, `cos_amplitude`, `sin_calibrated`, `cos_calibrated`, `resolver_position`, `encoder_A/B/Z`, `counts_per_rev`, `sample_counter`.
+- **Real-time resolver decode:** Timer1 triggers ADC2 at 1 kHz; each interrupt samples AN1/AN4, normalises sine/cosine, and computes angle with `atan2f`.
+- **Software quadrature:** A/B/Z states are generated from `counts_per_rev` entirely in firmware (no GPIO drive yet) for validation in the GUI.
+- **Calibrated visibility:** Offsets and gains (`sin_offset`, `cos_offset`, `sin_amplitude`, `cos_amplitude`) are live-editable over X2Cscope/GUI and clamped to avoid divide-by-zero writes.
+- **Dual-host tooling:** Works with X2Cscope for quick watch/plotting or the provided PyQt5 GUI for one-click calibration and waveform viewing.
+- **dsPIC33AK-friendly:** Configured for the dsPIC33AK128MC106 Curiosity board with UART2 (115200-8-N-1) already wired for scope traffic.
 
-## Python GUI (`ResolverEncoder.py`)
+## Repository Layout
 
-- Targets **PyQt5** for broader compatibility. Dependencies: `PyQt5`, `pyqtgraph`, `pyx2cscope`, `pyserial` (install with `pip install PyQt5 pyqtgraph pyx2cscope pyserial`).
-- Usage: run `python ResolverEncoder.py`, pick the project ELF (e.g. `dist/default/production/X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X.production.elf`), choose the COM port, connect, and press **Calibrate** to auto-fill offsets/gains.
-- The **Waveforms** window plots sine, cosine, and angle/pi with adjustable trigger and windowing. **Counts/rev** writes `counts_per_rev` live so you can sweep resolutions without reflashing.
+```
+LX340XX-dsPIC33AK/
+├── README.md                  <-- you are here
+├── X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X/
+│   ├── main.c                 <-- resolver/encoder data path + X2Cscope hooks
+│   ├── nbproject/             <-- MPLAB X configuration
+│   ├── mcc_generated_files/   <-- Melody-generated drivers (Timer1, ADC2, UART2)
+│   └── ...
+├── ResolverEncoder.py         <-- PyQt5 GUI for calibration and plotting
+├── app/                       <-- auxiliary GUI assets/config (if any)
+├── spinning_logo_rpm_red.ico  <-- GUI icon
+└── pyx2cscope.x2cscope.log    <-- X2Cscope session log (optional)
+```
 
-## Build / flash
+Everything you need to rebuild, modify, and run the resolver-to-encoder demo lives in `X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X` plus the Python GUI at the repo root.
 
-1. Open `X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X` in MPLAB X with the dsPIC33AK-MC DFP and XC-DSC toolchain configured.
-2. Build and program the Curiosity board (`F11` / *Make and Program Device*); UART2 at 115200 baud is already wired for X2Cscope.
-3. Launch the Python GUI or X2Cscope, load the ELF, and interact with the exported variables.
+## Requirements
 
-## What changed (and why)
+- **Hardware:** dsPIC33AK128MC106 on the Curiosity board ([EV02G02A](https://www.microchip.com/en-us/development-tool/EV02G02A) + [EV74H48A](https://www.microchip.com/en-us/development-tool/ev74h48a)), resolver source, USB-to-serial (pkob4 on-board).
+- **Toolchain:**
+  - MPLAB X IDE v6.25 or later
+  - XC-DSC compiler v3.21 or newer
+  - dsPIC33AK-MC_DFP v1.2.125 (already referenced by the project)
+- **Host tooling:**
+  - X2Cscope for Windows/Linux ([x2cscope.github.io](https://x2cscope.github.io/))
+  - Python 3.9+ with `PyQt5`, `pyqtgraph`, `pyx2cscope`, `pyserial` (install via `pip install PyQt5 pyqtgraph pyx2cscope pyserial`)
 
-- Replaced the FFT benchmark with a resolver-to-encoder data path that mirrors `ResolverEncoder.py` (angle computation, calibrated waveforms, ABZ generation in software, X2Cscope-friendly globals).
-- Added guards against common field failures: gain sanitisation and counts-per-rev clamping. Angle uses standard `atan2f` for accuracy while still timing the trig path.
-- Fixed the X2Cscope UART shim to include `uart2.h` (the active UART instance for this project).
-- Ported the GUI to PyQt5 to avoid Qt6 deployment friction and kept all X2Cscope variable hookups intact. Timing readouts in the GUI refresh every ~3 s for readability.
+## Setup Instructions
+
+1. **Clone or download** this repository to your development machine.
+2. **Open the MPLAB X project:**
+   - Launch MPLAB X IDE.
+   - *File → Open Project...* and select `X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X`.
+3. **Check toolchain paths:**
+   - Ensure XC-DSC and the dsPIC33AK DFP are detected (`Project Properties → XC-DSC`).
+4. **Build the firmware:**
+   - Press `F11` (*Build Project*) to generate `dist/default/production/X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X.production.hex`.
+5. **Flash the board:**
+   - Connect the Curiosity board over USB and use *Make and Program Device*.
+6. **Start a host tool:**
+   - Use X2Cscope or run `python ResolverEncoder.py` to connect, load the ELF, and view the exported variables.
+
+## Connecting X2Cscope
+
+1. Launch X2Cscope and set the COM port for UART2 (115200-8-N-1).
+2. Import `dist/default/production/X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X.production.elf` so symbols are visible.
+3. Add key signals to watch/plot:
+   - `sin_raw`, `cos_raw`
+   - `sin_offset`, `cos_offset`, `sin_amplitude`, `cos_amplitude`
+   - `sin_calibrated`, `cos_calibrated`, `resolver_position`
+   - `encoder_A`, `encoder_B`, `encoder_Z`
+   - `counts_per_rev`, `sample_counter`
+4. Press *Run* to stream live data; edits to offsets/gains/`counts_per_rev` take effect immediately.
+
+## Using the Python GUI (`ResolverEncoder.py`)
+
+- **Install deps:** `pip install PyQt5 pyqtgraph pyx2cscope pyserial`.
+- **Run it:** `python ResolverEncoder.py`, choose the ELF (e.g. `dist/default/production/...production.elf`), select the COM port, and connect.
+- **Calibrate:** Click **Calibrate** to auto-populate offsets/gains based on the live resolver waveform.
+- **Plotting:** The **Waveforms** tab shows sine, cosine, and angle/pi with adjustable trigger and windowing. **Counts/rev** lets you sweep resolutions without reflashing.
+
+## How It Works (firmware)
+
+- Timer1 runs at 1 kHz and triggers ADC2 Channel0 (AN1) and Channel1 (AN4).
+- ADC ISRs deposit raw samples into `sin_raw` / `cos_raw`.
+- `process_samples()` applies offsets/gains, sanitises gains to avoid divide-by-zero, computes `resolver_position = atan2f(sin_calibrated, cos_calibrated)`, and derives A/B/Z from `counts_per_rev`.
+- `X2CScope_Update()` publishes all globals each tick so X2Cscope/GUI can read and write them in real time.
+
+## Customizing / Extending
+
+- Change `counts_per_rev` live to match your mechanical resolution or to test how the A/B/Z logic behaves at different grid sizes.
+- Add GPIO drive for A/B/Z if you need physical quadrature outputs; the software states are already available.
+- Swap the 1 kHz cadence or ADC channels in Melody to match your hardware; the rest of the data path is cadence-agnostic.
+- Log waveforms in the GUI for offline analysis or feed them into other Python tooling.
+
+## Troubleshooting
+
+| Issue | Fix |
+|-------|-----|
+| No data in X2Cscope / GUI | Confirm UART2 COM port and 115200-8-N-1. Ensure `SYSTEM_Initialize()` enables UART2 and ADC2. |
+| Angle jumps or drifts | Re-run **Calibrate** to refresh offsets/gains; verify resolver amplitude is within ADC range. |
+| Counts per rev feels wrong | Adjust `counts_per_rev` live; values are clamped to sane ranges to prevent divide-by-zero. |
+| Build fails on dependencies | Verify XC-DSC path and dsPIC33AK DFP in `Project Properties`; regenerate Melody drivers if hardware pins change. |
+
+## References & Useful Links
+
+- [X2Cscope documentation](https://x2cscope.github.io/)
+- [pyx2cscope on PyPI](https://pypi.org/project/pyx2cscope/)
+- [XC-DSC Compiler User’s Guide](https://ww1.microchip.com/downloads/en/DeviceDoc/50002441E.pdf)
+- [dsPIC33AK128MC106 Curiosity board](https://ww1.microchip.com/downloads/en/DeviceDoc/DS70005475A.pdf)
+
+Feel free to fork the repo, add hardware A/B/Z drive, and share results—contributions are welcome!
