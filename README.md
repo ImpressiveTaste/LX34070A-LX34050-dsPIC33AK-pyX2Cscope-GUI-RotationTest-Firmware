@@ -74,7 +74,7 @@ Everything you need to rebuild, modify, and run the resolver-to-encoder demo liv
 
 ## Using the Python GUI (`ResolverEncoder.py`)
 
-- **Install deps:** `pip install PyQt5 pyqtgraph pyx2cscope pyserial`.
+- **Install deps:** `pip install pyx2cscope`.
 - **Run it:** `python ResolverEncoder.py`, choose the ELF (e.g. `dist/default/production/...production.elf`), select the COM port, and connect.
 - **Calibrate:** Click **Calibrate** to auto-populate offsets/gains based on the live resolver waveform.
 - **Plotting:** The **Waveforms** tab shows sine, cosine, and angle/pi with adjustable trigger and windowing. **Counts/rev** lets you sweep resolutions without reflashing.
