@@ -51,8 +51,8 @@ Everything you need to rebuild, modify, and run the resolver-to-encoder demo liv
    - Press `F11` (*Build Project*) to generate `dist/default/production/X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X.production.hex`.
 5. **Flash the board:**
    - Connect the Curiosity board over USB and use *Make and Program Device*.
-6. **Start a host tool:**
-   - Use X2Cscope or run `python ResolverEncoder.py` to connect, load the ELF, and view the exported variables.
+6. **Start GUI tool:**
+   - Use X2Cscope or run `python ResolverEncoder.py` to connect, load the ELF, and view the absolute position.
 
 ## Using the Python GUI (`ResolverEncoder.py`)
 
@@ -61,17 +61,6 @@ Everything you need to rebuild, modify, and run the resolver-to-encoder demo liv
 - **Calibrate:** Click **Calibrate** to auto-populate offsets/gains based on the live resolver waveform. When running autocalibration, please spin the rotor/target until calibration is completed.
 - **Plotting:** The **Waveforms** tab shows sine, cosine, and angle/pi with adjustable trigger and windowing. **Counts/rev** lets you sweep resolutions without reflashing.
 
-## Connecting X2Cscope (more difficult than just using the GUI app provided)
-
-1. Launch X2Cscope and set the COM port for UART2 (115200-8-N-1).
-2. Import `dist/default/production/X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X.production.elf` so symbols are visible.
-3. Add key signals to watch/plot:
-   - `sin_raw`, `cos_raw`
-   - `sin_offset`, `cos_offset`, `sin_amplitude`, `cos_amplitude`
-   - `sin_calibrated`, `cos_calibrated`, `resolver_position`
-   - `encoder_A`, `encoder_B`, `encoder_Z`
-   - `counts_per_rev`, `sample_counter`
-4. Press *Run* to stream live data; edits to offsets/gains/`counts_per_rev` take effect immediately.
 
 ## How It Works (firmware)
 
@@ -87,20 +76,6 @@ Everything you need to rebuild, modify, and run the resolver-to-encoder demo liv
 - Swap the 1 kHz cadence or ADC channels in Melody to match your hardware; the rest of the data path is cadence-agnostic.
 - Log waveforms in the GUI for offline analysis or feed them into other Python tooling.
 
-## Troubleshooting
 
-| Issue | Fix |
-|-------|-----|
-| No data in X2Cscope / GUI | Confirm UART2 COM port and 115200-8-N-1. Ensure `SYSTEM_Initialize()` enables UART2 and ADC2. |
-| Angle jumps or drifts | Re-run **Calibrate** to refresh offsets/gains; verify resolver amplitude is within ADC range. |
-| Counts per rev feels wrong | Adjust `counts_per_rev` live; values are clamped to sane ranges to prevent divide-by-zero. |
-| Build fails on dependencies | Verify XC-DSC path and dsPIC33AK DFP in `Project Properties`; regenerate Melody drivers if hardware pins change. |
-
-## References & Useful Links
-
-- [X2Cscope documentation](https://x2cscope.github.io/)
-- [pyx2cscope on PyPI](https://pypi.org/project/pyx2cscope/)
-- [XC-DSC Compiler User’s Guide](https://ww1.microchip.com/downloads/en/DeviceDoc/50002441E.pdf)
-- [dsPIC33AK128MC106 Curiosity board](https://ww1.microchip.com/downloads/en/DeviceDoc/DS70005475A.pdf)
 
 Feel free to fork the repo, add hardware A/B/Z drive, and share results—contributions are welcome!
