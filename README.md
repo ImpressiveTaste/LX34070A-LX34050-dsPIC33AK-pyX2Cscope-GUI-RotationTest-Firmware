@@ -37,7 +37,6 @@ Everything you need to rebuild, modify, and run the resolver-to-encoder demo liv
   - XC-DSC compiler v3.21 or newer
   - dsPIC33AK-MC_DFP v1.2.125 (already referenced by the project)
 - **Host tooling:**
-  - X2Cscope for Windows/Linux ([x2cscope.github.io](https://x2cscope.github.io/))
   - Python 3.9+ with `pyx2cscope` (install via `pip install pyx2cscope`)
 
 ## Setup Instructions
