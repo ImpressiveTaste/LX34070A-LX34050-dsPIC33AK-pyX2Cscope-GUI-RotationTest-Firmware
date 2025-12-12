@@ -36,7 +36,7 @@ Everything you need to rebuild, modify, and run the resolver-to-encoder demo liv
   - MPLAB X IDE v6.25 or later
   - XC-DSC compiler v3.21 or newer
   - dsPIC33AK-MC_DFP v1.2.125 (already referenced by the project)
-- **Host tooling:**
+- **To run the Digital Twin App:**
   - Python 3.9+ with `pyx2cscope` (install via `pip install pyx2cscope`)
 
 ## Setup Instructions
