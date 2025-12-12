@@ -7,14 +7,6 @@ This repository contains an MPLAB X project (`X2C-Scope-Blinky-dspic33AK128MC106
 Advantages of this sensor: no need of a magnet as a target—just a metallic target like a copper disk or a PCB!
 https://www.microchip.com/en-us/products/sensors-and-motor-drive/inductive-position-sensors
 
-## Project Highlights
-
-- **Real-time resolver decode:** Timer1 triggers ADC2 at 1 kHz; each interrupt samples AN1/AN4, normalises sine/cosine, and computes angle with `atan2f`.
-- **Software quadrature:** A/B/Z states are generated from `counts_per_rev` entirely in firmware (no GPIO drive yet) for validation in the GUI.
-- **Calibrated visibility:** Offsets and gains (`sin_offset`, `cos_offset`, `sin_amplitude`, `cos_amplitude`) are live-editable over X2Cscope/GUI and clamped to avoid divide-by-zero writes.
-- **Dual-host tooling:** Works with X2Cscope for quick watch/plotting or the provided PyQt5 GUI for one-click calibration and waveform viewing.
-- **dsPIC33AK-friendly:** Configured for the dsPIC33AK128MC106 Curiosity board with UART2 (115200-8-N-1) already wired for scope traffic.
-
 ## Repository Layout
 
 ```
