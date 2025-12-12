@@ -39,7 +39,7 @@ Everything you need to rebuild, modify, and run the resolver-to-encoder demo liv
 
 ## Requirements
 
-- **Hardware:** dsPIC33AK128MC106 on the Curiosity board ([EV02G02A](https://www.microchip.com/en-us/development-tool/EV02G02A) + [EV74H48A](https://www.microchip.com/en-us/development-tool/ev74h48a)), resolver source, USB-to-serial (pkob4 on-board).
+- **Hardware:** dsPIC33AK128MC106 on the Curiosity board ([EV02G02A](https://www.microchip.com/en-us/development-tool/EV02G02A) + [EV74H48A](https://www.microchip.com/en-us/development-tool/ev74h48a)), LX34050 or LX34070A, USB-to-serial (pkob4 on-board).
 - **Toolchain:**
   - MPLAB X IDE v6.25 or later
   - XC-DSC compiler v3.21 or newer
