@@ -30,6 +30,10 @@ LX340XX-dsPIC33AK/
 
 Everything you need to rebuild, modify, and run the resolver-to-encoder demo lives in `X2C-Scope-Blinky-dspic33AK128MC106-Curiosity.X` plus the Python GUI at the repo root.
 
+## Video walkthrough
+
+[![Resolver Encoder Demo](https://img.youtube.com/vi/ZiPm2cT6u0s/maxresdefault.jpg)](https://youtu.be/ZiPm2cT6u0s)
+
 ## Requirements
 
 - **Hardware:** dsPIC33AK128MC106 on the Curiosity board ([EV02G02A](https://www.microchip.com/en-us/development-tool/EV02G02A) + [EV74H48A](https://www.microchip.com/en-us/development-tool/ev74h48a)), resolver source, USB-to-serial (pkob4 on-board).
@@ -70,7 +74,7 @@ Everything you need to rebuild, modify, and run the resolver-to-encoder demo liv
 
 ## Using the Python GUI (`ResolverEncoder.py`)
 
-- **Install deps:** `pip install pyx2cscope`.
+- **Install deps:** `pip install PyQt5 pyqtgraph pyx2cscope pyserial`.
 - **Run it:** `python ResolverEncoder.py`, choose the ELF (e.g. `dist/default/production/...production.elf`), select the COM port, and connect.
 - **Calibrate:** Click **Calibrate** to auto-populate offsets/gains based on the live resolver waveform.
 - **Plotting:** The **Waveforms** tab shows sine, cosine, and angle/pi with adjustable trigger and windowing. **Counts/rev** lets you sweep resolutions without reflashing.
